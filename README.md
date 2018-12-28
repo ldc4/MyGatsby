@@ -36,5 +36,27 @@
 ```
 
 开发：`npm start` 或 `npm run dev`
+
 生成静态页面：`npm run build`
+
 格式化代码：`npm run format`
+
+## 疑问
+
+1. 如何部署在github上
+
+https://www.gatsbyjs.org/docs/how-gatsby-works-with-github-pages/
+
+根据本项目的情况：
+
+> 安装gh-pages开发依赖
+>  ```
+>  npm install gh-pages --save-dev
+>  ```
+> 添加npm script
+>  ```
+>  "scripts": {
+>    "deploy": "gatsby build --prefix-paths && gh-pages -r https://github.com/ldc4/blog.git -d public"
+>  }
+>  ```
+  
