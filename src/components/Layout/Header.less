@@ -2,24 +2,94 @@
 
 .header {
   height: 50px;
-  line-height: 50px;
-  background-color: @color-primary;
+  background-color: @color-header-bg;
 
   .logo {
     height: 50px;
     margin-left: 10px;
+    float: left;
+
     .img {
       display: inline-block;
       height: 50px;
+      line-height: 50px;
       margin: 5px 0;
     }
+
     .title {
       display: inline-block;
-      height: 50px;
-      color: #FFFFFF;
+      height: 40px;
+      line-height: 40px;
+      color: @color-default;
       font-size: @size-text-xl;
       vertical-align: top;
-      margin: 0 5px;
+      padding: 0 5px;
+      border-top: 5px solid @color-header-bg;
+      border-bottom: 5px solid @color-header-bg;
+    }
+
+  }
+
+  .logo.active {
+    .title {
+      color: @color-text-title;
+      background-color: @color-default;
+    }
+  }
+
+  .logo:hover {
+    .title {
+      color: @color-text-title;
+      background-color: @color-default;
+    }
+  }
+
+  .nav {
+    height: 50px;
+    margin-left: 20px;
+    float: left;
+
+    ul.nav-list {
+      list-style: none;
+      height: 50px;
+      padding-top: 8px;
+      
+
+      li {
+        display: inline-block;
+        box-sizing: border-box;
+        list-style: none;
+        padding: 5px 20px;
+        margin-right: 1px;
+        border: 2px solid @color-header-bg;
+        
+        a {
+          display: block;
+          text-decoration: none;
+          word-break: keep-all;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: @color-default;
+          font-size: 18px;
+          font-weight: 900;
+          height: 20px;
+          box-sizing: border-box;
+          line-height: 18px;
+        }
+      }
+
+      li.active {
+        border: 2px solid @color-border;
+      }
+
+      li:hover {
+        background-color: @color-default;
+        border: 2px solid @color-default;
+        a {
+          color: @color-text-title;
+        }
+      }
     }
   }
 

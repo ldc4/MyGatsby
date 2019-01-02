@@ -6,25 +6,14 @@ import styles from './Layout.less';
 
 class Layout extends React.Component {
 
-  getHeader() {
-    const { location } = this.props
-    const rootPath = `${__PATH_PREFIX__}/`
-
-    if (location.pathname === rootPath) {
-      // 首页
-      return <Header />
-    } else {
-      // 其他页面
-      return <Header />
-    }
-  }
-
   render() {
-    const { children } = this.props
+    const { location, children } = this.props
     return (
-      <div className={styles['container']}>
-        {this.getHeader()}
-        {children}
+      <div className="container">
+        <div className="content">
+          <Header location={location} />
+          <div className="page">{children}</div>
+        </div>
         <Footer />
       </div>
     )
