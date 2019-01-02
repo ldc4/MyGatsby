@@ -59,4 +59,19 @@ https://www.gatsbyjs.org/docs/how-gatsby-works-with-github-pages/
 >    "deploy": "gatsby build --prefix-paths && gh-pages -r https://github.com/ldc4/blog.git -d public"
 >  }
 >  ```
-  
+
+2. 启动报错
+   
+```
+Error: The module '/Users/weedustzhao/WeeCode/StudySpace/MyGatsby/node_modules/sharp/build/Release/sharp.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 57. This version of Node.js requires
+NODE_MODULE_VERSION 64. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+```
+
+这是因为启动的node版本和安装时的node版本 不一致。
+iTerm的node版本和VS Code的版本不一致。
+
+解决：查看vs code的node版本，然后npm rebuild一下。
+

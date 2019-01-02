@@ -8,7 +8,7 @@ const Logo = () => (
       query LogoQuery {
         avatar: file(absolutePath: { regex: "/logo.jpg/" }) {
           childImageSharp {
-            fixed(width: 50, height: 50) {
+            fixed(width: 40, height: 40) {
               ...GatsbyImageSharpFixed
             }
           }
