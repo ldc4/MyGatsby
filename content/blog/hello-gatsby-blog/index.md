@@ -5,6 +5,11 @@ category: 'readme'
 tags: 'hello-world'
 ---
 
+采用[gatsby](https://github.com/gatsbyjs/gatsby)来搭建博客  
+Gatsby v2: Blazing fast modern site generator for React
+
+<!-- end -->
+
 ## 说明
 
 该博客用gatsby创建
