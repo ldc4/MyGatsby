@@ -5,10 +5,6 @@ category: 'readme'
 tags: 'hello-world'
 ---
 
-> 采用gatsby创建的博客
-
-<!-- end -->
-
 ## 说明
 
 该博客用gatsby创建

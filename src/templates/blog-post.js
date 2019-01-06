@@ -41,7 +41,7 @@ class BlogPostTemplate extends React.Component {
           </div>
         </div>
         <div className="blog-content">
-          <div className="blog-excerpt" dangerouslySetInnerHTML={{ __html: excerptHTML }} />
+          {excerptHTML && <div className="blog-excerpt" dangerouslySetInnerHTML={{ __html: excerptHTML }} />}
           <div className="blog-post" dangerouslySetInnerHTML={{ __html: postHTML }} />
           <div className="blog-over">
             <span className="over-l"></span>
