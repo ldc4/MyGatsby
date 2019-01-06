@@ -5,23 +5,23 @@ import dayjs from 'dayjs';
 import Layout from '../components/Layout/Layout';
 import { Row, Col } from '../components/Grids';
 import SEO from '../components/seo';
-import '../style/global.less';
 import './index.less';
 
 class BlogIndex extends React.Component {
   render() {
-    const { data } = this.props
-    const siteTitle = data.site.siteMetadata.title
-    const posts = data.allMarkdownRemark.edges
+    const { data } = this.props;
+    const siteMetadata = data.site.siteMetadata;
+    const posts = data.allMarkdownRemark.edges;
 
     return (
-      <Layout location={this.props.location} title={siteTitle}>
+      <Layout location={this.props.location} metadata={siteMetadata}>
         <SEO
           title="All posts"
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}
         />
         <div className="fragment-list">
           {posts.map(({ node }) => {
+            console.log(node);
             const title = node.frontmatter.title || node.fields.slug;
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
             const tags = node.frontmatter.tags && node.frontmatter.tags.split(',');
@@ -75,6 +75,7 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         title
+        author
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {

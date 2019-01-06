@@ -1,20 +1,20 @@
 import React from 'react'
 import Header from './Header';
 import Footer from './Footer';
-import styles from './Layout.less';
+import './Layout.less';
 
 
 class Layout extends React.Component {
 
   render() {
-    const { location, children } = this.props
+    const { location, metadata, children } = this.props;
     return (
-      <div className="container">
-        <div className="content">
-          <Header location={location} />
-          <div className="page">{children}</div>
+      <div className="layout-container">
+        <div className="layout-content">
+          <Header location={location} title={metadata.title} />
+          <div className="layout-page">{children}</div>
         </div>
-        <Footer />
+        <Footer author={metadata.author} />
       </div>
     )
   }

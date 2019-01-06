@@ -1,8 +1,8 @@
 module.exports = {
   pathPrefix: "/blog",
   siteMetadata: {
-    title: '零度尘封',
-    author: 'weedust',
+    title: 'LDC4',
+    author: 'Weedust',
     description: '从零开始，斗破苍穹，七界传说',
     siteUrl: 'https://weedust.com/',
     social: {
@@ -77,6 +77,12 @@ module.exports = {
     },
     'gatsby-plugin-offline',
     'gatsby-plugin-react-helmet',
-    'gatsby-plugin-less'
+    'gatsby-plugin-less',
+    {
+      resolve: `gatsby-plugin-typography`,
+      options: {
+        pathToConfigModule: `src/utils/typography.js`,
+      },
+    }
   ],
 }

@@ -6,7 +6,8 @@ import './Header.less'
 
 class Header extends React.Component {
   render() {
-    const { pathname } = this.props.location;
+    const { location, title } = this.props;
+    const { pathname } = location;
     return (
       <div className="header">
         <div className={`logo ${pathname === '/' ? 'active' : ''}`}>
@@ -14,17 +15,17 @@ class Header extends React.Component {
             <div className="img">
               <Logo />
             </div>
-            <div className="title">LDC4</div>
+            <div className="title">{title}</div>
           </Link>
         </div>
         <div className="nav">
           <ul className="nav-list">
-            <li className={pathname === '/test1' ? 'active' : ''}>
+            {/* <li className={pathname === '/test1' ? 'active' : ''}>
               <Link to="/test1">归档</Link>
             </li>
             <li className={pathname === '/test2' ? 'active' : ''}>
               <Link to="/test2">关于</Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

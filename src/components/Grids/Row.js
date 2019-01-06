@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 export default class Row extends React.Component {
   render() {

@@ -1,16 +1,13 @@
 ---
-title: 没有中文怎么行
-date: '2018-12-28 11:41:38'
-tags: 'first,哈哈哈,哈哈哈,哈哈哈,哈哈哈,哈哈哈,xjxi,jdfklj,就多了几分'
-category: 'sdfdf'
+title: README
+date: '2019-01-06 17:44:58'
+category: 'readme'
+tags: 'hello-world'
 ---
 
-[这个是文章的开头说明](http://www.baidu.com)是否**哈哈**
-> 测试
-> kjdskljf
+> 采用gatsby创建的博客
 
 <!-- end -->
-
 
 ## 说明
 
@@ -73,5 +70,19 @@ https://www.gatsbyjs.org/docs/how-gatsby-works-with-github-pages/
 >    "deploy": "gatsby build --prefix-paths && gh-pages -r https://github.com/ldc4/blog.git -d public"
 >  }
 >  ```
-  
+
+2. 启动报错
+   
+```
+Error: The module '/Users/weedustzhao/WeeCode/StudySpace/MyGatsby/node_modules/sharp/build/Release/sharp.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 57. This version of Node.js requires
+NODE_MODULE_VERSION 64. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+```
+
+这是因为启动的node版本和安装时的node版本 不一致。
+iTerm的node版本和VS Code的版本不一致。
+
+解决：查看vs code的node版本，然后npm rebuild一下。
 
