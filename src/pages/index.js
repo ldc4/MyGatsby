@@ -24,7 +24,7 @@ class BlogIndex extends React.Component {
             console.log(node);
             const title = node.frontmatter.title || node.fields.slug;
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
-            const tags = node.frontmatter.tags && node.frontmatter.tags.split(',');
+            const tags = node.frontmatter.tags && node.frontmatter.tags.split(',') || [];
             const category = node.frontmatter.category;
             return (
               <div className="fragment" key={node.fields.slug}>
