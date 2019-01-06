@@ -8,9 +8,10 @@ class Header extends React.Component {
   render() {
     const { location, title } = this.props;
     const { pathname } = location;
+    const rootPath = `${__PATH_PREFIX__}/`;
     return (
       <div className="header">
-        <div className={`logo ${pathname === '/' ? 'active' : ''}`}>
+        <div className={`logo ${pathname === rootPath ? 'active' : ''}`}>
           <Link to="/">
             <div className="img">
               <Logo />

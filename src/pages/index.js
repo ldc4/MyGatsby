@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import Layout from '../components/Layout/Layout';
 import { Row, Col } from '../components/Grids';
-import SEO from '../components/seo';
+import SEO from '../components/SEO/seo';
 import './index.less';
 
 class BlogIndex extends React.Component {
