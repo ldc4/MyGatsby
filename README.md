@@ -75,3 +75,10 @@ iTerm的node版本和VS Code的版本不一致。
 
 解决：查看vs code的node版本，然后npm rebuild一下。
 
+# TODO
+
+- 分类页面
+- 标签页面
+- 关于页面
+- 导航配置化
+- 文章列表分页

@@ -12,6 +12,13 @@ class BlogPostTemplate extends React.Component {
     const { title, date, tags, category } = frontmatter;
     const { previous, next } = this.props.pageContext;
 
+    // 处理前言
+    let excerptHTML = '', postHTML = html;
+    if (html.indexOf('<!-- end -->') !== -1) {
+      excerptHTML = `<blockquote>${html.split('<!-- end -->')[0]}</blockquote>`;
+      postHTML = html.split('<!-- end -->')[1];
+    }
+
     return (
       <Layout location={this.props.location} metadata={siteMetadata}>
         <SEO title={title} description={excerpt} />
@@ -34,7 +41,8 @@ class BlogPostTemplate extends React.Component {
           </div>
         </div>
         <div className="blog-content">
-          <div className="blog-post" dangerouslySetInnerHTML={{ __html: html }} />
+          <div className="blog-excerpt" dangerouslySetInnerHTML={{ __html: excerptHTML }} />
+          <div className="blog-post" dangerouslySetInnerHTML={{ __html: postHTML }} />
           <div className="blog-over">
             <span className="over-l"></span>
             <span className="over-m">OVER</span>
