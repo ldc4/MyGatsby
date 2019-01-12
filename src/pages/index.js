@@ -9,19 +9,20 @@ import './index.less';
 
 class BlogIndex extends React.Component {
   render() {
-    const { data } = this.props;
-    const siteMetadata = data.site.siteMetadata;
-    const posts = data.allMarkdownRemark.edges;
+    const { data = {}, location } = this.props;
+    const { site = {}, allMarkdownRemark = {}, allNavigationJSON = {} } = data;
+    const { siteMetadata } = site;
+    const { edges: posts = [] } = allMarkdownRemark;
+    const { edges: navs = [] } = allNavigationJSON;
 
     return (
-      <Layout location={this.props.location} metadata={siteMetadata}>
+      <Layout location={location} siteMetadata={siteMetadata} navs={navs}>
         <SEO
           title="All posts"
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}
         />
         <div className="fragment-list">
           {posts.map(({ node }) => {
-            console.log(node);
             const title = node.frontmatter.title || node.fields.slug;
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
             const tags = node.frontmatter.tags && node.frontmatter.tags.split(',') || [];
@@ -91,6 +92,14 @@ export const pageQuery = graphql`
             tags
             category
           }
+        }
+      }
+    }
+    allNavigationJson {
+      edges {
+        node {
+          name
+          link
         }
       }
     }

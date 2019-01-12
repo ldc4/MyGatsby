@@ -6,11 +6,16 @@ import './blog-post.less';
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const post = this.props.data.markdownRemark;
-    const siteMetadata = this.props.data.site.siteMetadata;
-    const { html, excerpt, frontmatter } = post;
+    const { data = {}, location, pageContext } = this.props;
+
+    const { site = {}, markdownRemark = {}, allNavigationJSON = {} } = data;
+    const { previous, next } = pageContext;
+    
+    const { siteMetadata } = site;
+    const { html = '', excerpt, frontmatter = {} } = markdownRemark;
+    const { edges: navs = [] } = allNavigationJSON;
+    
     const { title, date, tags, category } = frontmatter;
-    const { previous, next } = this.props.pageContext;
 
     // 处理前言
     let excerptHTML = '', postHTML = html;
@@ -20,7 +25,7 @@ class BlogPostTemplate extends React.Component {
     }
 
     return (
-      <Layout location={this.props.location} metadata={siteMetadata}>
+      <Layout location={location} siteMetadata={siteMetadata} navs={navs}>
         <SEO title={title} description={excerpt} />
         <div className="blog-header">
           <div className="blog-title">{title}</div>
@@ -95,6 +100,14 @@ export const pageQuery = graphql`
         date
         tags
         category
+      }
+    }
+    allNavigationJson {
+      edges {
+        node {
+          name
+          link
+        }
       }
     }
   }
