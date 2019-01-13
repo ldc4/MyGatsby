@@ -9,14 +9,21 @@ import './index.less';
 
 class BlogIndex extends React.Component {
   render() {
-    const { data = {}, location } = this.props;
-    const { site = {}, allMarkdownRemark = {}, allNavigationJSON = {} } = data;
+    const { data = {}, location = {} } = this.props;
+
+    const { site = {}, allMarkdownRemark = {}, allNavigationJson = {} } = data;
+    const { pathname = '' } = location;
+
     const { siteMetadata } = site;
     const { edges: posts = [] } = allMarkdownRemark;
-    const { edges: navs = [] } = allNavigationJSON;
+    const { edges: navs = [] } = allNavigationJson;
+
+    // 得到相对路径
+    const reg = new RegExp(`^${__PATH_PREFIX__}`);
+    const rePathname = pathname.replace(reg, '');
 
     return (
-      <Layout location={location} siteMetadata={siteMetadata} navs={navs}>
+      <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
         <SEO
           title="All posts"
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}

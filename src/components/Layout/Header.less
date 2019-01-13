@@ -54,6 +54,19 @@
       height: 50px;
       padding-top: 8px;
       
+      a {
+        text-decoration: none;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: @color-default;
+        font-size: 18px;
+        font-weight: 900;
+        height: 20px;
+        box-sizing: border-box;
+        line-height: 18px;
+      }
 
       li {
         display: inline-block;
@@ -62,21 +75,6 @@
         padding: 5px 20px;
         margin-right: 1px;
         border: 2px solid @color-header-bg;
-        
-        a {
-          display: block;
-          text-decoration: none;
-          word-break: keep-all;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: @color-default;
-          font-size: 18px;
-          font-weight: 900;
-          height: 20px;
-          box-sizing: border-box;
-          line-height: 18px;
-        }
       }
 
       li.active {
@@ -86,9 +84,11 @@
       li:hover {
         background-color: @color-default;
         border: 2px solid @color-default;
-        a {
-          color: @color-text-title;
-        }
+      }
+
+      a:hover {
+        color: @color-text-title;
+        
       }
     }
   }

@@ -1,14 +1,10 @@
 [
   {
-    "name": "归档",
-    "link": "archives"
+    "name": "分类",
+    "link": "/cats"
   },
   {
     "name": "标签",
-    "link": "tags"
-  },
-  {
-    "name": "关于",
-    "link": "about"
+    "link": "/tags"
   }
 ]

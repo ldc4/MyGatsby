@@ -6,12 +6,16 @@ import './Header.less'
 
 class Header extends React.Component {
   render() {
-    const { location, title } = this.props;
-    const { pathname } = location;
-    const rootPath = `${__PATH_PREFIX__}/`;
+    const { pathname, title, navs } = this.props;
+    
+    // 处理末尾"/"
+    const reg = new RegExp(`\/$`);
+    const rePathname = pathname.replace(reg, '');
+    console.log(rePathname)
+
     return (
       <div className="header">
-        <div className={`logo ${pathname === rootPath ? 'active' : ''}`}>
+        <div className={`logo ${rePathname === '' ? 'active' : ''}`}>
           <Link to="/">
             <div className="img">
               <Logo />
@@ -21,12 +25,15 @@ class Header extends React.Component {
         </div>
         <div className="nav">
           <ul className="nav-list">
-            {/* <li className={pathname === '/test1' ? 'active' : ''}>
-              <Link to="/test1">归档</Link>
-            </li>
-            <li className={pathname === '/test2' ? 'active' : ''}>
-              <Link to="/test2">关于</Link>
-            </li> */}
+            {navs.map(({ node }, index) => {
+              return (
+                <Link key={`${node.link}-${index}`} to={node.link}>
+                  <li className={rePathname === `${node.link}` ? 'active' : ''}>
+                    {node.name}
+                  </li>
+                </Link>
+              )
+            })}
           </ul>
         </div>
       </div>

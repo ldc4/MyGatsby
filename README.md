@@ -75,6 +75,10 @@ iTerm的node版本和VS Code的版本不一致。
 
 解决：查看vs code的node版本，然后npm rebuild一下。
 
+3. `__PATH_PREFIX__`变量是如何工作的？
+
+todo
+
 # TODO
 
 - 分类页面

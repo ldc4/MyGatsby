@@ -6,16 +6,21 @@ import './blog-post.less';
 
 class BlogPostTemplate extends React.Component {
   render() {
-    const { data = {}, location, pageContext } = this.props;
+    const { data = {}, location = {}, pageContext } = this.props;
 
-    const { site = {}, markdownRemark = {}, allNavigationJSON = {} } = data;
+    const { site = {}, markdownRemark = {}, allNavigationJson = {} } = data;
+    const { pathname = '' } = location;
     const { previous, next } = pageContext;
     
     const { siteMetadata } = site;
     const { html = '', excerpt, frontmatter = {} } = markdownRemark;
-    const { edges: navs = [] } = allNavigationJSON;
+    const { edges: navs = [] } = allNavigationJson;
     
     const { title, date, tags, category } = frontmatter;
+
+    // 得到相对路径
+    const reg = new RegExp(`^${__PATH_PREFIX__}`);
+    const rePathname = pathname.replace(reg, '');
 
     // 处理前言
     let excerptHTML = '', postHTML = html;
@@ -25,7 +30,7 @@ class BlogPostTemplate extends React.Component {
     }
 
     return (
-      <Layout location={location} siteMetadata={siteMetadata} navs={navs}>
+      <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
         <SEO title={title} description={excerpt} />
         <div className="blog-header">
           <div className="blog-title">{title}</div>

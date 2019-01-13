@@ -5,14 +5,13 @@ import './Layout.less';
 
 
 class Layout extends React.Component {
-
   render() {
-    const { location, siteMetadata = {}, navs, children } = this.props;
-    const { title, author } = siteMetadata;
+    const { pathname, metadata = {}, navs, children } = this.props;
+    const { title, author } = metadata;
     return (
       <div className="layout-container">
         <div className="layout-content">
-          <Header location={location} title={title} navs={navs} />
+          <Header pathname={pathname} title={title} navs={navs} />
           <div className="layout-page">{children}</div>
         </div>
         <Footer author={author} />
