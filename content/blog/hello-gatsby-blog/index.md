@@ -8,7 +8,7 @@ tags: ['hello-world']
 采用[gatsby](https://github.com/gatsbyjs/gatsby)来搭建博客  
 Gatsby v2: Blazing fast modern site generator for React
 
-<!-- end -->
+<!-- more -->
 
 ## 说明
 

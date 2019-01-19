@@ -25,9 +25,9 @@ class BlogPostTemplate extends React.Component {
 
     // 处理前言
     let excerptHTML = '', postHTML = html;
-    if (html.indexOf('<!-- end -->') !== -1) {
-      excerptHTML = `<blockquote>${html.split('<!-- end -->')[0]}</blockquote>`;
-      postHTML = html.split('<!-- end -->')[1];
+    if (html.indexOf('<!-- more -->') !== -1) {
+      excerptHTML = `<blockquote>${html.split('<!-- more -->')[0]}</blockquote>`;
+      postHTML = html.split('<!-- more -->')[1];
     }
 
     return (
