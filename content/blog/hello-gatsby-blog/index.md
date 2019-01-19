@@ -2,7 +2,7 @@
 title: README
 date: '2019-01-06 17:44:58'
 category: 'readme'
-tags: 'hello-world'
+tags: ['hello-world']
 ---
 
 采用[gatsby](https://github.com/gatsbyjs/gatsby)来搭建博客  

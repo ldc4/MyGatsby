@@ -6,18 +6,32 @@ import dayjs from 'dayjs'
 import Layout from '../components/Layout/Layout'
 import { Row, Col } from '../components/Grids'
 import SEO from '../components/SEO/seo'
-import './index.less'
+import './tags.less'
 
-class BlogIndex extends React.Component {
+class TagsTemplate extends React.Component {
+
   render() {
-    const { data = {}, location = {} } = this.props;
+    const { data = {}, location = {}, pageContext } = this.props;
 
-    const { site = {}, allMarkdownRemark = {}, allNavigationJson = {} } = data;
+    const { site = {}, tagMarkdownRemark = {}, allMarkdownRemark = {}, allNavigationJson = {} } = data;
     const { pathname = '' } = location;
+    const { tag } = pageContext;
 
     const { siteMetadata } = site;
-    const { edges: posts = [] } = allMarkdownRemark;
     const { edges: navs = [] } = allNavigationJson;
+    // 特殊处理未标记
+    let posts = [];
+    if (tag) {
+      posts = tagMarkdownRemark.edges || [];
+    } else {
+      const allPosts = allMarkdownRemark.edges || [];
+      allPosts.forEach((post) => {
+        const { tags } = post.node.frontmatter;
+        if (!tags || tags.length === 0) {
+          posts.push(post);
+        }
+      });
+    }
 
     // 得到相对路径
     const reg = new RegExp(`^${__PATH_PREFIX__}`);
@@ -26,10 +40,19 @@ class BlogIndex extends React.Component {
     return (
       <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
         <SEO
-          title="All posts"
+          title={`tag-${tag}`}
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}
         />
-        <div className="fragment-list page-content">
+        {tag ?
+          <div className="fragment-header">
+            <div className="title">标签</div>
+            <div className="tag">{tag}</div>
+          </div>:
+          <div className="fragment-header">
+            <div className="title">未标记</div>
+          </div>  
+        }
+        <div className="fragment-list">
           {posts.map(({ node }) => {
             const title = node.frontmatter.title || node.fields.slug;
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
@@ -77,17 +100,38 @@ class BlogIndex extends React.Component {
   }
 }
 
-export default BlogIndex
+export default TagsTemplate
 
 export const pageQuery = graphql`
-  query {
+  query BlogPostByTag($tag: String) {
     site {
       siteMetadata {
         title
         author
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    tagMarkdownRemark: allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+      filter: { frontmatter: { tags: { in: [$tag] } } }
+    ) {
+      edges {
+        node {
+          excerpt(format: HTML)
+          fields {
+            slug
+          }
+          frontmatter {
+            date
+            title
+            tags
+            category
+          }
+        }
+      }
+    }
+    allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+    ) {
       edges {
         node {
           excerpt(format: HTML)

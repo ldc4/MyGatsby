@@ -1,11 +1,15 @@
-const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
+const path = require('path')
+const _ = require('lodash');
+const { createFilePath } = require('gatsby-source-filesystem')
 
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions
+  const { createPage } = actions;
 
   return new Promise((resolve, reject) => {
-    const blogPost = path.resolve(`./src/templates/blog-post.js`)
+
+    const blogPost = path.resolve('./src/templates/blog-post.js');
+    const tagsTemplate = path.resolve('./src/templates/tags.js');
+
     resolve(
       graphql(
         `
@@ -21,6 +25,7 @@ exports.createPages = ({ graphql, actions }) => {
                   }
                   frontmatter {
                     title
+                    tags
                   }
                 }
               }
@@ -29,17 +34,16 @@ exports.createPages = ({ graphql, actions }) => {
         `
       ).then(result => {
         if (result.errors) {
-          console.log(result.errors)
-          reject(result.errors)
+          console.log(result.errors);
+          reject(result.errors);
         }
 
-        // Create blog posts pages.
-        const posts = result.data.allMarkdownRemark.edges
+        // 创建博客文章页面
+        const posts = result.data.allMarkdownRemark.edges;
 
         posts.forEach((post, index) => {
-          const previous =
-            index === posts.length - 1 ? null : posts[index + 1].node
-          const next = index === 0 ? null : posts[index - 1].node
+          const previous = index === posts.length - 1 ? null : posts[index + 1].node;
+          const next = index === 0 ? null : posts[index - 1].node;
 
           createPage({
             path: post.node.fields.slug,
@@ -49,7 +53,33 @@ exports.createPages = ({ graphql, actions }) => {
               previous,
               next,
             },
+          });
+        });
+
+        // 创建Tags页面
+        let tags = [];
+        posts.forEach(edge => {
+          if (_.get(edge, "node.frontmatter.tags")) {
+            tags = tags.concat(edge.node.frontmatter.tags);
+          }
+        });
+        tags = _.uniq(tags);
+        tags.forEach(tag => {
+          createPage({
+            path: `/tags/${_.kebabCase(tag)}/`,
+            component: tagsTemplate,
+            context: {
+              tag,
+            },
           })
+        });
+        // 创建未标记的页面
+        createPage({
+          path: `/tags/untag/`,
+          component: tagsTemplate,
+          context: {
+            tag: '',
+          },
         })
       })
     )

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
+import { kebabCase } from 'lodash'
 import Layout from '../components/Layout/Layout'
 import SEO from '../components/SEO/seo'
 import './blog-post.less';
@@ -40,17 +41,17 @@ class BlogPostTemplate extends React.Component {
           </div>
           <div className="blog-info">
             <div className="blog-tags">
-                {tags && tags.split(',').map((tag, index) => {
+                {tags && tags.map((tag, index) => {
                 return (
                   <div className="blog-tag" key={`${tag}-${index}`}>
-                    <Link to="/">{tag}</Link>
+                    <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
                   </div>
                 )
               })}
             </div>
           </div>
         </div>
-        <div className="blog-content">
+        <div className="blog-content page-content">
           {excerptHTML && <div className="blog-excerpt" dangerouslySetInnerHTML={{ __html: excerptHTML }} />}
           <div className="blog-post" dangerouslySetInnerHTML={{ __html: postHTML }} />
           <div className="blog-over">

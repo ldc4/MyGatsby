@@ -1,13 +1,29 @@
-import React from 'react'
-import { Link, graphql } from 'gatsby'
-import dayjs from 'dayjs';
+import React from 'react';
+import { Link, graphql } from 'gatsby';
+import { kebabCase, floor, ceil, findIndex } from 'lodash';
 
 import Layout from '../components/Layout/Layout';
 import { Row, Col } from '../components/Grids';
 import SEO from '../components/SEO/seo';
-import './index.less';
+import './tags.less';
 
-class BlogIndex extends React.Component {
+class TagsPage extends React.Component {
+
+  getTagsHTML(tags) {
+    let tagsHTML = [];
+    tags.forEach((tag, index) => {
+      tagsHTML.push((
+        <div className="tag" key={`col-${index}`}>
+          <Link to={`/tags/${tag.tagLink}`}>
+            <div className="tag-value">{tag.tagValue}</div>
+            <div className="tag-count">{tag.tagCount}</div>
+          </Link>
+        </div>
+      ));
+    });
+    return <div className="tags-wrap page-content">{tagsHTML}</div>
+  }
+
   render() {
     const { data = {}, location = {} } = this.props;
 
@@ -15,8 +31,8 @@ class BlogIndex extends React.Component {
     const { pathname = '' } = location;
 
     const { siteMetadata } = site;
-    const { edges: posts = [] } = allMarkdownRemark;
-    const { edges: navs = [] } = allNavigationJson;
+    const { edges: tags } = allMarkdownRemark;
+    const { edges: navs } = allNavigationJson;
 
     // 得到相对路径
     const reg = new RegExp(`^${__PATH_PREFIX__}`);
@@ -24,13 +40,18 @@ class BlogIndex extends React.Component {
 
     return (
       <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
-        todo
+        <SEO
+          title="All tags"
+          keywords={[`blog`, `gatsby`, `javascript`, `react`]}
+        />
+        {this.getTagsHTML(dealWithTags(tags))}
       </Layout>
     )
   }
 }
 
-export default BlogIndex
+
+export default TagsPage
 
 export const pageQuery = graphql`
   query {
@@ -40,18 +61,11 @@ export const pageQuery = graphql`
         author
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark {
       edges {
         node {
-          excerpt(format: HTML)
-          fields {
-            slug
-          }
           frontmatter {
-            date
-            title
             tags
-            category
           }
         }
       }
@@ -66,3 +80,61 @@ export const pageQuery = graphql`
     }
   }
 `
+/**
+将graphql查询的结果进行处理
+原数据结果：
+[
+  {
+    "node": {
+      "frontmatter": {
+        "tags": ["aaa", "bbb"]
+      }
+    }
+  }
+]
+处理为：
+[
+  {
+    "tagValue": "aaa",
+    "tagLink": "aaa",
+    "tagCount": 1
+  },
+  {
+    "tagValue": "bbb",
+    "tagLink": "bbb",
+    "tagCount": 1
+  }
+]
+另外，进行一些边界处理 和 根据数量排序
+*/
+function dealWithTags(arr) {
+  // 将多个tag先拆分出来
+  const result = [];
+  let noTagCount = 0; // 统计没有tag的个数
+  arr.forEach((item) => {
+    const { tags } = item.node.frontmatter;
+    if (tags && tags.length > 0) {
+      tags.forEach((tag) => {
+        const index = findIndex(result, (node) => (node.tagValue === tag));
+        if (index >= 0) {
+          result[index]['tagCount']++;
+        } else {
+          result.push({
+            tagValue: tag,
+            tagLink: kebabCase(tag),
+            tagCount: 1,
+          })
+        }
+      })
+    } else {
+      noTagCount++;
+    }
+  });
+  result.push({
+    tagValue: '未标记',
+    tagLink: 'untag',
+    tagCount: noTagCount,
+  });
+  // 排序
+  return result;
+}
