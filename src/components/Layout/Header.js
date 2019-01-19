@@ -11,7 +11,6 @@ class Header extends React.Component {
     // 处理末尾"/"
     const reg = new RegExp(`\/$`);
     const rePathname = pathname.replace(reg, '');
-    console.log(rePathname)
 
     return (
       <div className="header">

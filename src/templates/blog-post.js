@@ -3,7 +3,7 @@ import { Link, graphql } from 'gatsby'
 import { kebabCase } from 'lodash'
 import Layout from '../components/Layout/Layout'
 import SEO from '../components/SEO/seo'
-import './blog-post.less';
+import './blog-post.less'
 
 class BlogPostTemplate extends React.Component {
   render() {
@@ -36,7 +36,7 @@ class BlogPostTemplate extends React.Component {
         <div className="blog-header">
           <div className="blog-title">{title}</div>
           <div className="blog-info">
-            <div className="blog-category">Under <Link to="/">{category}</Link></div>
+            <div className="blog-category">Under <Link to={`/cats/${kebabCase(category) || 'uncat'}/`}>{category || '未分类'}</Link></div>
             <div className="blog-date">On {date}</div>
           </div>
           <div className="blog-info">

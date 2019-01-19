@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, graphql } from 'gatsby';
-import { kebabCase, floor, ceil, findIndex } from 'lodash';
+import { kebabCase, findIndex } from 'lodash';
 
 import Layout from '../components/Layout/Layout';
-import { Row, Col } from '../components/Grids';
 import SEO from '../components/SEO/seo';
 import './tags.less';
 
@@ -105,7 +104,7 @@ export const pageQuery = graphql`
     "tagCount": 1
   }
 ]
-另外，进行一些边界处理 和 根据数量排序
+另外，进行一些边界处理
 */
 function dealWithTags(arr) {
   // 将多个tag先拆分出来
@@ -130,11 +129,12 @@ function dealWithTags(arr) {
       noTagCount++;
     }
   });
-  result.push({
-    tagValue: '未标记',
-    tagLink: 'untag',
-    tagCount: noTagCount,
-  });
-  // 排序
+  if (noTagCount > 0) {
+    result.push({
+      tagValue: '未标记',
+      tagLink: 'untag',
+      tagCount: noTagCount,
+    });
+  }
   return result;
 }

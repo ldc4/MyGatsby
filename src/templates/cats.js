@@ -6,18 +6,32 @@ import dayjs from 'dayjs'
 import Layout from '../components/Layout/Layout'
 import { Row, Col } from '../components/Grids'
 import SEO from '../components/SEO/seo'
-import './index.less'
+import './cats.less'
 
-class BlogIndex extends React.Component {
+class CatsTemplate extends React.Component {
+
   render() {
-    const { data = {}, location = {} } = this.props;
+    const { data = {}, location = {}, pageContext } = this.props;
 
-    const { site = {}, allMarkdownRemark = {}, allNavigationJson = {} } = data;
+    const { site = {}, catMarkdownRemark = {}, allMarkdownRemark = {}, allNavigationJson = {} } = data;
     const { pathname = '' } = location;
+    const { cat } = pageContext;
 
     const { siteMetadata } = site;
-    const { edges: posts = [] } = allMarkdownRemark;
     const { edges: navs = [] } = allNavigationJson;
+    // 特殊处理未标记
+    let posts = [];
+    if (cat) {
+      posts = catMarkdownRemark.edges || [];
+    } else {
+      const allPosts = allMarkdownRemark.edges || [];
+      allPosts.forEach((post) => {
+        const { category } = post.node.frontmatter;
+        if (!category) {
+          posts.push(post);
+        }
+      });
+    }
 
     // 得到相对路径
     const reg = new RegExp(`^${__PATH_PREFIX__}`);
@@ -26,14 +40,23 @@ class BlogIndex extends React.Component {
     return (
       <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
         <SEO
-          title="All posts"
+          title={`cat-${cat}`}
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}
         />
-        <div className="fragment-list page-content">
+        {cat ?
+          <div className="fragment-header">
+            <div className="title">标签</div>
+            <div className="cat">{cat}</div>
+          </div>:
+          <div className="fragment-header">
+            <div className="title">未分类</div>
+          </div>  
+        }
+        <div className="fragment-list">
           {posts.map(({ node }) => {
             const title = node.frontmatter.title || node.fields.slug;
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
-            const tags = node.frontmatter.tags || [];
+            const cats = node.frontmatter.cats || [];
             const category = node.frontmatter.category;
             return (
               <div className="fragment" key={node.fields.slug}>
@@ -56,11 +79,11 @@ class BlogIndex extends React.Component {
                       <div className="excerpt" dangerouslySetInnerHTML={{ __html: node.excerpt }} />
                     </Col>
                     <Col span={6}>
-                      <div className="tags">
-                        {tags.map((tag, index) => {
+                      <div className="cats">
+                        {cats.map((cat, index) => {
                           return (
-                            <div className="tag-item" key={`${tag}-${index}`}>
-                              <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
+                            <div className="cat-item" key={`${cat}-${index}`}>
+                              <Link to={`/cats/${kebabCase(cat)}/`}>{cat}</Link>
                             </div>
                           )
                         })}
@@ -77,17 +100,38 @@ class BlogIndex extends React.Component {
   }
 }
 
-export default BlogIndex
+export default CatsTemplate
 
 export const pageQuery = graphql`
-  query {
+  query BlogPostByCat($cat: String) {
     site {
       siteMetadata {
         title
         author
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    catMarkdownRemark: allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+      filter: { frontmatter: { category: { in: [$cat] } } }
+    ) {
+      edges {
+        node {
+          excerpt(format: HTML)
+          fields {
+            slug
+          }
+          frontmatter {
+            date
+            title
+            tags
+            category
+          }
+        }
+      }
+    }
+    allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+    ) {
       edges {
         node {
           excerpt(format: HTML)

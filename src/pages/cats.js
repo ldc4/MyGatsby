@@ -1,13 +1,28 @@
-import React from 'react'
-import { Link, graphql } from 'gatsby'
-import dayjs from 'dayjs';
+import React from 'react';
+import { Link, graphql } from 'gatsby';
+import { kebabCase, findIndex } from 'lodash';
 
 import Layout from '../components/Layout/Layout';
-import { Row, Col } from '../components/Grids';
 import SEO from '../components/SEO/seo';
-import './index.less';
+import './cats.less';
 
-class BlogIndex extends React.Component {
+class CatsPage extends React.Component {
+
+  getCatsHTML(cats) {
+    let catsHTML = [];
+    cats.forEach((cat, index) => {
+      catsHTML.push((
+        <div className="cat" key={`col-${index}`}>
+          <Link to={`/cats/${cat.catLink}`}>
+            <div className="cat-value">{cat.catValue}</div>
+            <div className="cat-count">{cat.catCount}</div>
+          </Link>
+        </div>
+      ));
+    });
+    return <div className="cats-wrap page-content">{catsHTML}</div>
+  }
+
   render() {
     const { data = {}, location = {} } = this.props;
 
@@ -15,8 +30,8 @@ class BlogIndex extends React.Component {
     const { pathname = '' } = location;
 
     const { siteMetadata } = site;
-    const { edges: posts = [] } = allMarkdownRemark;
-    const { edges: navs = [] } = allNavigationJson;
+    const { edges: cats } = allMarkdownRemark;
+    const { edges: navs } = allNavigationJson;
 
     // 得到相对路径
     const reg = new RegExp(`^${__PATH_PREFIX__}`);
@@ -24,13 +39,18 @@ class BlogIndex extends React.Component {
 
     return (
       <Layout pathname={rePathname} metadata={siteMetadata} navs={navs}>
-        todo
+        <SEO
+          title="All cats"
+          keywords={[`blog`, `gatsby`, `javascript`, `react`]}
+        />
+        {this.getCatsHTML(dealWithCats(cats))}
       </Layout>
     )
   }
 }
 
-export default BlogIndex
+
+export default CatsPage
 
 export const pageQuery = graphql`
   query {
@@ -40,17 +60,10 @@ export const pageQuery = graphql`
         author
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    allMarkdownRemark {
       edges {
         node {
-          excerpt(format: HTML)
-          fields {
-            slug
-          }
           frontmatter {
-            date
-            title
-            tags
             category
           }
         }
@@ -66,3 +79,55 @@ export const pageQuery = graphql`
     }
   }
 `
+/**
+将graphql查询的结果进行处理
+原数据结果：
+[
+  {
+    "node": {
+      "frontmatter": {
+        "category": "xxx"
+      }
+    }
+  }
+]
+处理为：
+[
+  {
+    "catValue": "xxx",
+    "catLink": "xxx",
+    "catCount": 1
+  }
+]
+另外，进行一些边界处理
+*/
+function dealWithCats(arr) {
+  // 将多个tag先拆分出来
+  const result = [];
+  let noCatCount = 0; // 统计没有cat的个数
+  arr.forEach((item) => {
+    const { category } = item.node.frontmatter;
+    if (category) {
+      const index = findIndex(result, (node) => (node.catValue === category));
+        if (index >= 0) {
+          result[index]['catCount']++;
+        } else {
+          result.push({
+            catValue: category,
+            catLink: kebabCase(category),
+            catCount: 1,
+          })
+        }
+    } else {
+      noCatCount++;
+    }
+  });
+  if (noCatCount > 0) {
+    result.push({
+      catValue: '未分类',
+      catLink: 'uncat',
+      catCount: noCatCount,
+    });
+  }
+  return result;
+}

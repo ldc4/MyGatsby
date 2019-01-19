@@ -1,5 +1,5 @@
 const path = require('path')
-const _ = require('lodash');
+const _ = require('lodash')
 const { createFilePath } = require('gatsby-source-filesystem')
 
 exports.createPages = ({ graphql, actions }) => {
@@ -9,6 +9,7 @@ exports.createPages = ({ graphql, actions }) => {
 
     const blogPost = path.resolve('./src/templates/blog-post.js');
     const tagsTemplate = path.resolve('./src/templates/tags.js');
+    const catsTemplate = path.resolve('./src/templates/cats.js');
 
     resolve(
       graphql(
@@ -26,6 +27,7 @@ exports.createPages = ({ graphql, actions }) => {
                   frontmatter {
                     title
                     tags
+                    category
                   }
                 }
               }
@@ -40,11 +42,9 @@ exports.createPages = ({ graphql, actions }) => {
 
         // 创建博客文章页面
         const posts = result.data.allMarkdownRemark.edges;
-
         posts.forEach((post, index) => {
           const previous = index === posts.length - 1 ? null : posts[index + 1].node;
           const next = index === 0 ? null : posts[index - 1].node;
-
           createPage({
             path: post.node.fields.slug,
             component: blogPost,
@@ -81,6 +81,33 @@ exports.createPages = ({ graphql, actions }) => {
             tag: '',
           },
         })
+
+        // 创建Cats页面
+        let cats = [];
+        posts.forEach(edge => {
+          if (_.get(edge, "node.frontmatter.category")) {
+            cats.push(edge.node.frontmatter.category);
+          }
+        });
+        cats = _.uniq(cats);
+        cats.forEach(cat => {
+          createPage({
+            path: `/cats/${_.kebabCase(cat)}/`,
+            component: catsTemplate,
+            context: {
+              cat,
+            },
+          })
+        });
+        // 创建未分类的页面
+        createPage({
+          path: `/cats/uncat/`,
+          component: catsTemplate,
+          context: {
+            cat: '',
+          },
+        })
+
       })
     )
   })
