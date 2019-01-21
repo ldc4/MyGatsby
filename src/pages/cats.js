@@ -65,6 +65,7 @@ export const pageQuery = graphql`
         node {
           frontmatter {
             category
+            draft
           }
         }
       }
@@ -106,7 +107,8 @@ function dealWithCats(arr) {
   const result = [];
   let noCatCount = 0; // 统计没有cat的个数
   arr.forEach((item) => {
-    const { category } = item.node.frontmatter;
+    const { category, draft } = item.node.frontmatter;
+    if (draft) return;  // 屏蔽草稿
     if (category) {
       const index = findIndex(result, (node) => (node.catValue === category));
         if (index >= 0) {

@@ -65,6 +65,7 @@ export const pageQuery = graphql`
         node {
           frontmatter {
             tags
+            draft
           }
         }
       }
@@ -111,7 +112,8 @@ function dealWithTags(arr) {
   const result = [];
   let noTagCount = 0; // 统计没有tag的个数
   arr.forEach((item) => {
-    const { tags } = item.node.frontmatter;
+    const { tags, draft } = item.node.frontmatter;
+    if (draft) return;  // 屏蔽草稿
     if (tags && tags.length > 0) {
       tags.forEach((tag) => {
         const index = findIndex(result, (node) => (node.tagValue === tag));

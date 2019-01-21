@@ -17,7 +17,7 @@ class BlogPostTemplate extends React.Component {
     const { html = '', excerpt, frontmatter = {} } = markdownRemark;
     const { edges: navs = [] } = allNavigationJson;
     
-    const { title, date, tags, category } = frontmatter;
+    const { title, date, tags, category, draft } = frontmatter;
 
     // 得到相对路径
     const reg = new RegExp(`^${__PATH_PREFIX__}`);
@@ -38,6 +38,7 @@ class BlogPostTemplate extends React.Component {
           <div className="blog-info">
             <div className="blog-category">Under <Link to={`/cats/${kebabCase(category) || 'uncat'}/`}>{category || '未分类'}</Link></div>
             <div className="blog-date">On {date}</div>
+            {draft && <div className="blog-draft">草稿</div>}
           </div>
           <div className="blog-info">
             <div className="blog-tags">
@@ -106,6 +107,7 @@ export const pageQuery = graphql`
         date
         tags
         category
+        draft
       }
     }
     allNavigationJson {

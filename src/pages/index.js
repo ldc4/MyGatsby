@@ -35,12 +35,14 @@ class BlogIndex extends React.Component {
             const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
             const tags = node.frontmatter.tags || [];
             const category = node.frontmatter.category;
-            return (
+            const isDraft = process.env.NODE_ENV === 'production' && node.frontmatter.draft;
+            return !isDraft && (
               <div className="fragment" key={node.fields.slug}>
                 <div className="title">
                   <Link to={node.fields.slug}>
                     {title}
                   </Link>
+                  {node.frontmatter.draft && <span>(草稿)</span>}
                 </div>
                 <div className="content">
                   <Row>
@@ -99,6 +101,7 @@ export const pageQuery = graphql`
             title
             tags
             category
+            draft
           }
         }
       }
