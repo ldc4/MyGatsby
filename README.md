@@ -41,9 +41,9 @@
 
 格式化代码：`npm run format`
 
-## 疑问
+## 部署
 
-1. 如何部署在github上
+如何部署在github上，参考：
 
 https://www.gatsbyjs.org/docs/how-gatsby-works-with-github-pages/
 
@@ -60,26 +60,7 @@ https://www.gatsbyjs.org/docs/how-gatsby-works-with-github-pages/
 >  }
 >  ```
 
-2. 启动报错
-   
-```
-Error: The module '/Users/weedustzhao/WeeCode/StudySpace/MyGatsby/node_modules/sharp/build/Release/sharp.node'
-was compiled against a different Node.js version using
-NODE_MODULE_VERSION 57. This version of Node.js requires
-NODE_MODULE_VERSION 64. Please try re-compiling or re-installing
-the module (for instance, using `npm rebuild` or `npm install`).
-```
-
-这是因为启动的node版本和安装时的node版本 不一致。
-iTerm的node版本和VS Code的版本不一致。
-
-解决：查看vs code的node版本，然后npm rebuild一下。
-
-3. `__PATH_PREFIX__`变量是如何工作的？
-
-todo
-
-# TODO
+## TODO
 
 - [x] 分类页面
 - [x] 标签页面
@@ -87,4 +68,4 @@ todo
 - [x] 导航配置化
 - [ ] 文章列表分页
 - [ ] 文章列表默认摘要异常问题
-- [ ] 草稿标识
+- [x] 草稿标识
