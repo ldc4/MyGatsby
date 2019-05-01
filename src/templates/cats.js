@@ -45,7 +45,7 @@ class CatsTemplate extends React.Component {
         />
         {cat ?
           <div className="fragment-header">
-            <div className="title">标签</div>
+            <div className="title">分类</div>
             <div className="cat">{cat}</div>
           </div>:
           <div className="fragment-header">
