@@ -43,57 +43,60 @@ class CatsTemplate extends React.Component {
           title={`cat-${cat}`}
           keywords={[`blog`, `gatsby`, `javascript`, `react`]}
         />
-        {cat ?
+        <div className="cats-page">
           <div className="fragment-header">
-            <div className="title">分类</div>
-            <div className="cat">{cat}</div>
-          </div>:
-          <div className="fragment-header">
-            <div className="title">未分类</div>
-          </div>  
-        }
-        <div className="fragment-list">
-          {posts.map(({ node }) => {
-            const title = node.frontmatter.title || node.fields.slug;
-            const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
-            const cats = node.frontmatter.cats || [];
-            const category = node.frontmatter.category;
-            return (
-              <div className="fragment" key={node.fields.slug}>
-                <div className="title">
-                  <Link to={node.fields.slug}>
-                    {title}
-                  </Link>
-                </div>
-                <div className="content">
-                  <Row>
-                    <Col span={4}>
-                      <div className="date-and-category">
-                        <div className="date">{date}</div>
-                        <div className="category">
-                          <Link to={`/cats/${kebabCase(category) || 'uncat'}/`}>{category || '未分类'}</Link>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col span={14}>
-                      <div className="excerpt" dangerouslySetInnerHTML={{ __html: node.excerpt }} />
-                    </Col>
-                    <Col span={6}>
-                      <div className="cats">
-                        {cats.map((cat, index) => {
-                          return (
-                            <div className="cat-item" key={`${cat}-${index}`}>
-                              <Link to={`/cats/${kebabCase(cat)}/`}>{cat}</Link>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
+            {cat ?
+              <div>
+                <div className="title">分类</div>
+                <div className="cat">{cat}</div>
               </div>
-            )
-          })}
+              :
+              <div className="title">未分类</div>
+            }
+          </div>
+          <div className="fragment-list">
+            {posts.map(({ node }) => {
+              const title = node.frontmatter.title || node.fields.slug;
+              const date = dayjs(node.frontmatter.date).format('YYYY-MM-DD');
+              const cats = node.frontmatter.cats || [];
+              const category = node.frontmatter.category;
+              return (
+                <div className="fragment" key={node.fields.slug}>
+                  <div className="title">
+                    <Link to={node.fields.slug}>
+                      {title}
+                    </Link>
+                  </div>
+                  <div className="content">
+                    <Row>
+                      <Col span={4}>
+                        <div className="date-and-category">
+                          <div className="date">{date}</div>
+                          <div className="category">
+                            <Link to={`/cats/${kebabCase(category) || 'uncat'}/`}>{category || '未分类'}</Link>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col span={14}>
+                        <div className="excerpt" dangerouslySetInnerHTML={{ __html: node.excerpt }} />
+                      </Col>
+                      <Col span={6}>
+                        <div className="cats">
+                          {cats.map((cat, index) => {
+                            return (
+                              <div className="cat-item" key={`${cat}-${index}`}>
+                                <Link to={`/cats/${kebabCase(cat)}/`}>{cat}</Link>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </Layout>
     )
