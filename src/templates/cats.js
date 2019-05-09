@@ -26,8 +26,8 @@ class CatsTemplate extends React.Component {
     } else {
       const allPosts = allMarkdownRemark.edges || [];
       allPosts.forEach((post) => {
-        const { category } = post.node.frontmatter;
-        if (!category) {
+        const { category, draft } = post.node.frontmatter;
+        if (!category && !draft) {
           posts.push(post);
         }
       });
@@ -128,6 +128,7 @@ export const pageQuery = graphql`
             title
             tags
             category
+            draft
           }
         }
       }
@@ -146,6 +147,7 @@ export const pageQuery = graphql`
             title
             tags
             category
+            draft
           }
         }
       }

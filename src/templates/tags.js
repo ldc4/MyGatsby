@@ -26,8 +26,8 @@ class TagsTemplate extends React.Component {
     } else {
       const allPosts = allMarkdownRemark.edges || [];
       allPosts.forEach((post) => {
-        const { tags } = post.node.frontmatter;
-        if (!tags || tags.length === 0) {
+        const { tags, draft } = post.node.frontmatter;
+        if ((!tags || tags.length === 0) && !draft) {
           posts.push(post);
         }
       });
@@ -73,7 +73,7 @@ class TagsTemplate extends React.Component {
                         <div className="date-and-category">
                           <div className="date">{date}</div>
                           <div className="category">
-                            <Link to="/">{category}</Link>
+                            <Link to={`/cats/${kebabCase(category) || 'uncat'}/`}>{category || '未分类'}</Link>
                           </div>
                         </div>
                       </Col>
@@ -128,6 +128,7 @@ export const pageQuery = graphql`
             title
             tags
             category
+            draft
           }
         }
       }
@@ -146,6 +147,7 @@ export const pageQuery = graphql`
             title
             tags
             category
+            draft
           }
         }
       }
