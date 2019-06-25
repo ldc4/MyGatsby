@@ -27,7 +27,8 @@ draft: true
 7. 数据可视化
 
 ### TODO
-- React v16的新特性
+- React v16的新特性 ✔
+- egg.js学习与实践
 - 更深入的学习一下GraphQL
 - 了解并学习一个CSS-in-JS框架
 - 了解并学习服务端渲染Next.js
