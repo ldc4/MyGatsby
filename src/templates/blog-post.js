@@ -3,9 +3,28 @@ import { Link, graphql } from 'gatsby'
 import { kebabCase } from 'lodash'
 import Layout from '../components/Layout/Layout'
 import SEO from '../components/SEO/seo'
+import Gitalk from 'gitalk'
+import _ from 'lodash'
 import './blog-post.less'
+import 'gitalk/dist/gitalk.css'
 
 class BlogPostTemplate extends React.Component {
+
+  componentDidMount() {
+    // 集成gitalk
+    const title = _.get(this.props, 'data.markdownRemark.frontmatter.title');
+    const option = _.get(this.props, 'data.allGitalkJson.edges[0].node');
+    const id = location.pathname;
+    if (location.host.indexOf('localhost') === -1) { // 本地开发避免创建issue
+      const gitalk = new Gitalk(Object.assign(option, {
+        id,
+        title,
+        distractionFreeMode: false
+      }));
+      gitalk.render('gitalk-container');
+    }
+  }
+
   render() {
     const { data = {}, location = {}, pageContext } = this.props;
 
@@ -82,6 +101,7 @@ class BlogPostTemplate extends React.Component {
               )}
             </div>
           </div>
+          <div id="gitalk-container"></div>
         </div>
       </Layout>
     )
@@ -115,6 +135,17 @@ export const pageQuery = graphql`
         node {
           name
           link
+        }
+      }
+    }
+    allGitalkJson {
+      edges {
+        node {
+          clientID
+          clientSecret
+          repo
+          owner
+          admin
         }
       }
     }

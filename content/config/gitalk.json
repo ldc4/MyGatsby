@@ -1,0 +1,9 @@
+[
+  {
+    "clientID": "49e26d4dd7cf72ebb64d",
+    "clientSecret": "e593383921b7f8ef0b08db7fc8c109828a8e50d1",
+    "repo": "blog",
+    "owner": "ldc4",
+    "admin": ["ldc4"]
+  }
+]
