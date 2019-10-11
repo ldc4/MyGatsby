@@ -780,3 +780,439 @@ methods: {
 
 可以通过watch结合计算库（例如：tween.js）来实现。
 
+
+## 可复用性&组合
+
+### 混入Mixin
+
+全局混入：`Vue.mixin({ ... })`
+
+> 一旦使用全局混入，它将影响每一个之后创建的 Vue 实例
+
+局部混入：`Vue.component({ mixins: [...] })`
+
+> Vue.config.optionMergeStrategies.xxx 可以设置自定义选项xxx的合并逻辑
+
+### 自定义指令
+
+全局注册：
+
+```javascript
+Vue.directive('focus', {
+    inserted: function(el) {
+        el.focus()
+    }
+})
+```
+
+局部注册：使用directives选项
+
+```javascript
+directives: {
+  focus: {
+    // 指令的定义
+    inserted: function (el) {
+      el.focus()
+    }
+  }
+}
+```
+
+钩子函数：
+- bind：指令第一次绑定到元素时调用。（用于初始化）
+- inserted：被绑元素插入父节点时调用。 (仅保证父节点存在，但不一定已被插入文档中)
+- update：所在组件的VNode更新时调用。（但是可能发生在其子 VNode 更新之前）
+- componentUpdated：指令所在组件的VNode及其子VNode全部更新后调用。
+- unbind: 指令与元素解绑时调用。
+
+钩子函数参数：
+- el: 所绑定的元素
+- binding: 
+    - name: 指令名
+    - value: 绑定的值
+    - oldValue: 绑定的前一个值（update / componentUpdated 中使用）
+    - expression: 字符串形式的指令表达式
+    - arg: 指令参数
+    - modifiers: 修饰符对象
+- vnode: Vue编译生成的虚拟节点
+- oldVnode: 上一个虚拟节点（update / componentUpadted 中使用）
+
+> 除了 el 之外，其它参数都应该是只读的，切勿进行修改
+> 如果需要在钩子之间共享数据，建议通过元素的 dataset 来进行。
+
+
+动态指令参数：`v-mydirective:[argument]="value"`
+
+函数简写：只在bind和update时同时触发相同行为，传入一个函数即可
+
+对象字面量：value支持对象
+> 指令函数能够接受所有合法的 JavaScript 表达式。
+
+### 渲染函数&JSX
+
+render属性：
+```javascript
+render: function (createElement) {
+    return createElement(
+      'h' + this.level,   // 标签名称
+      this.$slots.default // 子节点数组
+    )
+},
+```
+
+节点、树以及虚拟DOM：
+```javascript
+// @returns {VNode}
+createElement(
+  // {String | Object | Function}
+  // 一个 HTML 标签名、组件选项对象，或者
+  // resolve 了上述任何一种的一个 async 函数。必填项。
+  'div',
+
+  // {Object}
+  // 一个与模板中属性对应的数据对象。可选。
+  {
+    // (详情见下一节)
+  },
+
+  // {String | Array}
+  // 子级虚拟节点 (VNodes)，由 `createElement()` 构建而成，
+  // 也可以使用字符串来生成“文本虚拟节点”。可选。
+  [
+    '先写一些文字',
+    createElement('h1', '一则头条'),
+    createElement(MyComponent, {
+      props: {
+        someProp: 'foobar'
+      }
+    })
+  ]
+)
+```
+
+数据对象：
+```javascript
+{
+  // 与 `v-bind:class` 的 API 相同，
+  // 接受一个字符串、对象或字符串和对象组成的数组
+  'class': {
+    foo: true,
+    bar: false
+  },
+  // 与 `v-bind:style` 的 API 相同，
+  // 接受一个字符串、对象，或对象组成的数组
+  style: {
+    color: 'red',
+    fontSize: '14px'
+  },
+  // 普通的 HTML 特性
+  attrs: {
+    id: 'foo'
+  },
+  // 组件 prop
+  props: {
+    myProp: 'bar'
+  },
+  // DOM 属性
+  domProps: {
+    innerHTML: 'baz'
+  },
+  // 事件监听器在 `on` 属性内，
+  // 但不再支持如 `v-on:keyup.enter` 这样的修饰器。
+  // 需要在处理函数中手动检查 keyCode。
+  on: {
+    click: this.clickHandler
+  },
+  // 仅用于组件，用于监听原生事件，而不是组件内部使用
+  // `vm.$emit` 触发的事件。
+  nativeOn: {
+    click: this.nativeClickHandler
+  },
+  // 自定义指令。注意，你无法对 `binding` 中的 `oldValue`
+  // 赋值，因为 Vue 已经自动为你进行了同步。
+  directives: [
+    {
+      name: 'my-custom-directive',
+      value: '2',
+      expression: '1 + 1',
+      arg: 'foo',
+      modifiers: {
+        bar: true
+      }
+    }
+  ],
+  // 作用域插槽的格式为
+  // { name: props => VNode | Array }
+  scopedSlots: {
+    default: props => createElement('span', props.text)
+  },
+  // 如果组件是其它组件的子组件，需为插槽指定名称
+  slot: 'name-of-slot',
+  // 其它特殊顶层属性
+  key: 'myKey',
+  ref: 'myRef',
+  // 如果你在渲染函数中给多个元素都应用了相同的 ref 名，
+  // 那么 `$refs.myRef` 会变成一个数组。
+  refInFor: true
+} 
+```
+
+**约束：VNode必须是唯一的**
+
+#### 使用js代替模板功能
+- v-if 和 v-for
+- v-model
+- 事件 & 按键修饰符
+- 插槽
+
+对于 .passive、.capture 和 .once 这些事件修饰符, Vue 提供了相应的前缀可以用于 on:
+
+
+修饰符 | 前缀 
+- | -
+.passive | &
+.capture | !
+.once | ~
+.capture.once 或 .once.capture | ~!
+
+```javascript
+on: {
+  '!click': this.doThisInCapturingMode,
+  '~keyup': this.doThisOnce,
+  '~!mouseover': this.doThisOnceInCapturingMode
+}
+```
+
+修饰符 | 处理函数中的等价操作
+- | -
+.stop | event.stopPropagation()
+.prevent | event.preventDefault()
+.self | if (event.target !== event.currentTarget) return
+按键：.enter, .13 | if (event.keyCode !== 13) return (对于别的按键修饰符来说，可将 13 改为另一个按键码)
+修饰键：.ctrl, .alt, .shift, .meta | if (!event.ctrlKey) return (将 ctrlKey 分别修改为 altKey、shiftKey 或者 metaKey)
+
+```javascript
+on: {
+  keyup: function (event) {
+    // 如果触发事件的元素不是事件绑定的元素
+    // 则返回
+    if (event.target !== event.currentTarget) return
+    // 如果按下去的不是 enter 键或者
+    // 没有同时按下 shift 键
+    // 则返回
+    if (!event.shiftKey || event.keyCode !== 13) return
+    // 阻止 事件冒泡
+    event.stopPropagation()
+    // 阻止该元素默认的 keyup 事件
+    event.preventDefault()
+    // ...
+  }
+}
+```
+
+可以通过 this.$slots 访问静态插槽的内容，每个插槽都是一个 VNode 数组  
+也可以通过 this.$scopedSlots 访问作用域插槽，每个作用域插槽都是一个返回若干 VNode 的函数  
+如果要用渲染函数向子组件中传递作用域插槽，可以利用 VNode 数据对象中的 scopedSlots 字段  
+
+#### JSX
+
+JSX babel插件：https://github.com/vuejs/jsx
+
+```javascript
+import AnchoredHeading from './AnchoredHeading.vue'
+
+new Vue({
+  el: '#demo',
+  render: function (h) {
+    return (
+      <AnchoredHeading level={1}>
+        <span>Hello</span> world!
+      </AnchoredHeading>
+    )
+  }
+})
+```
+
+> 将 h 作为 createElement 的别名是 Vue 生态系统中的一个通用惯例，实际上也是 JSX 所要求的
+
+
+#### 函数式组件
+
+```javascript
+Vue.component('my-component', {
+  functional: true,
+  // Props 是可选的
+  props: {
+    // ...
+  },
+  // 为了弥补缺少的实例
+  // 提供第二个参数作为上下文
+  render: function (createElement, context) {
+    // ...
+  }
+})
+```
+
+```html
+// 单文件组件
+<template functional>
+</template>
+```
+
+> 注意：在 2.3.0 之前的版本中，如果一个函数式组件想要接收 prop，则 props 选项是必须的。在 2.3.0 或以上的版本中，你可以省略 props 选项，所有组件上的特性都会被自动隐式解析为 prop。
+
+组件需要的一切都是通过context提供：
+- props
+- children
+- slots
+- scopedSlots
+- data
+- parent
+- listeners
+- data.on
+- injections
+
+向子元素或子组件传递特性和事件：
+```javascript
+Vue.component('my-functional-button', {
+  functional: true,
+  render: function (createElement, context) {
+    // 完全透传任何特性、事件监听器、子节点等。
+    return createElement('button', context.data, context.children)
+  }
+})
+```
+
+模板编译：`Vue.compile`
+
+### 插件
+
+Vue.use() 需要再调用new Vue()之前完成
+
+会自动阻止多次注册相同插件，届时即使多次调用也只会注册一次该插件。
+
+awesome-vue: https://github.com/vuejs/awesome-vue#components--libraries
+
+#### 开发插件
+
+暴露install方法，提供Vue构造器和可选的选项对象两个参数
+```javascript
+MyPlugin.install = function (Vue, options) {
+  // 1. 添加全局方法或属性
+  Vue.myGlobalMethod = function () {
+    // 逻辑...
+  }
+
+  // 2. 添加全局资源
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 3. 注入组件选项
+  Vue.mixin({
+    created: function () {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 4. 添加实例方法
+  Vue.prototype.$myMethod = function (methodOptions) {
+    // 逻辑...
+  }
+}
+```
+
+### 过滤器
+
+过滤器应该被添加在 JavaScript 表达式的尾部，由“管道”符号指示
+
+```html
+<!-- 在双花括号中 -->
+{{ message | capitalize }}
+
+<!-- 在 `v-bind` 中 -->
+<div v-bind:id="rawId | formatId"></div>
+```
+
+全局定义:
+
+```javascript
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
+```
+
+局部定义：filters选项
+
+```javascript
+filters: {
+  capitalize: function (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+}
+```
+
+当全局过滤器和局部过滤器重名时，会采用局部过滤器。
+
+过滤器可以串联：{{ message | filterA | filterB }}
+
+过滤器是 JavaScript 函数，因此可以接收参数：{{ message | filterA('arg1', arg2) }}
+
+
+### 工具
+
+#### 单文件组件
+
+参见：https://cn.vuejs.org/v2/guide/single-file-components.html
+
+#### 单元测试
+
+参见：https://cn.vuejs.org/v2/guide/unit-testing.html
+
+#### Typescript支持
+
+参见：https://cn.vuejs.org/v2/guide/typescript.html
+
+#### 生产环境部署
+
+参见：https://cn.vuejs.org/v2/guide/deployment.html
+
+### 规模化
+
+#### 路由
+
+参见：https://cn.vuejs.org/v2/guide/routing.html
+
+#### 状态管理
+
+参见：https://cn.vuejs.org/v2/guide/state-management.html
+
+#### 服务端渲染
+
+参见：https://cn.vuejs.org/v2/guide/ssr.html
+
+### 内在（深入响应式原理）
+
+参见：https://cn.vuejs.org/v2/guide/reactivity.html
+
+
+## 想法
+
+todo
+
+
+## 实践过程
+
+Vue无工程随手验证：https://github.com/ldc4/experiment/tree/master/vue-start
+
+pinetodo（完善中）：https://github.com/ldc4/pinetodo/tree/master/client
+
+工作中某个系统（vue + express + mysql）
