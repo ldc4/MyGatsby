@@ -3,7 +3,6 @@ title: Vue学习与实践
 date: '2019-09-25 09:44:27'
 category: '学习'
 tag: ['Vue', '起步']
-draft: true
 ---
 
 因为工作调动的原因，现在技术栈切到了 Vue + Express  
