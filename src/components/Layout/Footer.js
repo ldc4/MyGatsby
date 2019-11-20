@@ -4,9 +4,9 @@ import './Footer.less';
 
 class Footer extends React.Component {
   render() {
-    const { author } = this.props;
+    const { author, mode } = this.props;
     return (
-      <div className="footer">
+      <div className={`footer ${mode}`}>
         <div className="author">Theme By {author}</div>
         <div className="location">
           <i className="location-icon" />
