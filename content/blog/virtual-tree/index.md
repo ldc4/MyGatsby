@@ -89,7 +89,15 @@ element-ui旨在给大多数场景提供一个统一的组件，但是像一些�
 > 所以这里所说的虚拟树是指：结构是树形结构，但是渲染依然是列表，只是通过缩进来表示了层级结构  
 > 这里我提供一下虚拟树的实现，虚拟列表参考上面的文章即可
 
+### 演示效果
+
 ![](https://blog-1251945389.cos.ap-guangzhou.myqcloud.com/2.gif)
+
+### 结构示意
+
+![](https://blog-1251945389.cos.ap-guangzhou.myqcloud.com/3.png)
+
+### 源码
 
 组件源码：https://github.com/ldc4/experiment/blob/master/element/demo/src/components/VirtualTree/VirtualTree.vue  
 使用源码：https://github.com/ldc4/experiment/blob/master/element/demo/src/views/VirtualTree.vue
