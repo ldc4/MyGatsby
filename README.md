@@ -2,10 +2,19 @@
 
 该博客用gatsby创建
 
+链接：
+
+[gatsby英文文档](https://www.gatsbyjs.org/docs/)
+
+[gatsby中文文档](https://www.gatsbyjs.cn/docs/)
+
 ## 使用
 
 ### 使用cli工具
 利用[cli工具](https://www.gatsbyjs.org/docs/quick-start)启动
+```
+# npm install -g gatsby-cli
+```
 
 开发:
 
@@ -24,6 +33,7 @@
 
 ```
 "scripts": {
+  "init": "npm install -g gatsby-cli",
   "dev": "gatsby develop",
   "lint": "eslint --ext .js,.jsx --ignore-pattern public .",
   "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\"",
@@ -34,6 +44,8 @@
   "fix-semi": "eslint --quiet --ignore-pattern node_modules --ignore-pattern public --parser babel-eslint --no-eslintrc --rule '{\"semi\": [2, \"never\"], \"no-extra-semi\": [2]}' --fix gatsby-node.js"
 }
 ```
+
+安装环境：`npm run init`
 
 开发：`npm start` 或 `npm run dev`
 
