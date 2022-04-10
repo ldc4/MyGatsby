@@ -60,10 +60,15 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-google-analytics',
       options: {
-        //trackingId: 'ADD YOUR TRACKING ID HERE',
+        trackingId: '', // 你的谷歌分析trackingId
       },
     },
-    'gatsby-plugin-feed',
+    {
+      resolve: 'gatsby-plugin-feed',
+      options: {
+        feeds: [],
+      },
+    },
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
